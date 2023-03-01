@@ -79,22 +79,22 @@
             <div class="group">
               <label for="user" class="label">Username</label>
               <input
-              @keyup="handleRegisterUsername()"
+                @keyup="handleRegisterUsername()"
                 id="user"
                 v-model="user.username"
                 type="text"
                 class="input"
               />
               <transition name="slide-fade">
-                <span v-show="error_user_register.username"
-                  >{{ error_user_register.username_content }}</span
-                >
+                <span v-show="error_user_register.username">{{
+                  error_user_register.username_content
+                }}</span>
               </transition>
             </div>
             <div class="group">
               <label for="pass" class="label">Password</label>
               <input
-              @keyup="handleRegisterPassword()"
+                @keyup="handleRegisterPassword()"
                 id="pass"
                 type="password"
                 class="input"
@@ -102,15 +102,15 @@
                 v-model="user.password"
               />
               <transition name="slide-fade">
-                <span v-show="error_user_register.password"
-                  >{{ error_user_register.password_content }}</span
-                >
+                <span v-show="error_user_register.password">{{
+                  error_user_register.password_content
+                }}</span>
               </transition>
             </div>
             <div class="group">
               <label for="pass" class="label">Repeat Password</label>
               <input
-              @keyup="handleRegisterRepeatPassword()"
+                @keyup="handleRegisterRepeatPassword()"
                 id="pass"
                 type="password"
                 class="input"
@@ -118,18 +118,24 @@
                 v-model="user.repeat_password"
               />
               <transition name="slide-fade">
-                <span v-show="error_user_register.repeat_password"
-                  >{{ error_user_register.repeat_password_content }}</span
-                >
+                <span v-show="error_user_register.repeat_password">{{
+                  error_user_register.repeat_password_content
+                }}</span>
               </transition>
             </div>
             <div class="group">
               <label for="pass" class="label">Email Address</label>
-              <input @keyup="handleRegisterEmail()" id="pass" type="text" class="input" v-model="user.email" />
+              <input
+                @keyup="handleRegisterEmail()"
+                id="pass"
+                type="text"
+                class="input"
+                v-model="user.email"
+              />
               <transition name="slide-fade">
-                <span v-show="error_user_register.email"
-                  >{{ error_user_register.email_content }}</span
-                >
+                <span v-show="error_user_register.email">{{
+                  error_user_register.email_content
+                }}</span>
               </transition>
             </div>
             <div class="group">
@@ -152,7 +158,7 @@
 </template>
 
 <script>
-// import axios from "axios";
+import axios from "axios";
 export default {
   name: "LoginApp",
   data() {
@@ -192,147 +198,131 @@ export default {
       this.$store.state.statusOverly = false;
       this.$router.push({ path: "/" });
     },
-    validate_register(){
+    validate_register() {
       //
     },
     submit_register() {
-      // const data = {
-      //   username: this.user.username,
-      //   password: this.user.password,
-      //   email: this.user.email,
-      // };
-      
+      const data = {
+        username: this.user.username,
+        password: this.user.password,
+        email: this.user.email,
+      };
 
-      // axios
-      //   .post("http://localhost:8080/api/auth/register", data)
-      //   .then((response) => {
-      //     return response;
-      //   })
-      //   .then((data) => {
-      //     console.log(data);
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
+      axios
+        .post("http://localhost:8080/api/auth/register", data)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    setCookie(cname, cvalue, exdays) {
+      const d = new Date();
+      d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+      let expires = "expires=" + d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
     },
     submit_login() {
-      //verify_data
+      const data = {
+        username: this.user_login.username,
+        password: this.user_login.password,
+      };
+      // console.log(data)
 
-      //username
-      if (this.user_login.username.length < 6) {
-        this.error_user_login.username_content =
-          "Username phải ít nhất 6 kí tự";
-        this.error_user_login.username = true;
-      }
+      axios
+        .post("http://localhost:8080/api/auth/login", data)
+        .then((response) => {
+          const token = response.data;
+          this.setCookie("token", token, '3d');
+          this.user_login.username=""
+          this.user_login.password=""
+          this.$router.push({name: 'home'})
+        })
+        .catch(() => {
+          alert("co loi roi");
+        });
+    },
+    handleLoginUsername() {
       if (!this.user_login.username) {
         this.error_user_login.username_content = "Vui lòng nhập username";
         this.error_user_login.username = true;
-      }
-
-      //password
-      if (this.user_login.password.length < 6) {
-        this.error_user_login.password_content =
-          "Username phải ít nhất 6 kí tự";
-        this.error_user_login.password = true;
-      }
-      if (!this.user_login.password) {
-        this.error_user_login.password_content = "Vui lòng nhập password";
-        this.error_user_login.password = true;
-      }
-
-      // const data = {
-      //   username: this.user_login.username,
-      //   password: this.user_login.password
-      // }
-
-      // async function loginUser(){
-      //   try{
-      //     const response = await axios.post('http://localhost:8080/api/auth/login',data)
-      //     console.log(response)
-      //   }catch(error){
-      //     console.log(error)
-      //   }
-      // }
-      // loginUser()
-    },
-    handleLoginUsername() {
-      if(!this.user_login.username){
-        this.error_user_login.username_content = "Vui lòng nhập username";
-        this.error_user_login.username =  true;
-      }else{
-        if(this.user_login.username.length< 6){
+      } else {
+        if (this.user_login.username.length < 6) {
           this.error_user_login.username_content = "Nhập ít nhất 6 kí tự";
           this.error_user_login.username = true;
-        }else{
+        } else {
           this.error_user_login.username = false;
         }
       }
     },
-    handleLoginPassword(){
-      if(!this.user_login.password){
+    handleLoginPassword() {
+      if (!this.user_login.password) {
         this.error_user_login.password_content = "Vui lòng nhập password";
-        this.error_user_login.password =  true;
-      }else{
-        if(this.user_login.password.length< 6){
+        this.error_user_login.password = true;
+      } else {
+        if (this.user_login.password.length < 6) {
           this.error_user_login.password_content = "Nhập ít nhất 6 kí tự";
           this.error_user_login.password = true;
-        }else{
+        } else {
           this.error_user_login.password = false;
         }
       }
     },
-    handleRegisterUsername(){
-      if(!this.user.username){
+    handleRegisterUsername() {
+      if (!this.user.username) {
         this.error_user_register.username_content = "Vui lòng nhập username";
-        this.error_user_register.username =  true;
-      }else{
-        if(this.user.username.length< 6){
+        this.error_user_register.username = true;
+      } else {
+        if (this.user.username.length < 6) {
           this.error_user_register.username_content = "Nhập ít nhất 6 kí tự";
           this.error_user_register.username = true;
-        }else{
+        } else {
           this.error_user_register.username = false;
         }
       }
     },
-    handleRegisterPassword(){
-      if(!this.user.password){
+    handleRegisterPassword() {
+      if (!this.user.password) {
         this.error_user_register.password_content = "Vui lòng nhập password";
-        this.error_user_register.password =  true;
-      }else{
-        if(this.user.password.length< 6){
+        this.error_user_register.password = true;
+      } else {
+        if (this.user.password.length < 6) {
           this.error_user_register.password_content = "Nhập ít nhất 6 kí tự";
           this.error_user_register.password = true;
-        }else{
+        } else {
           this.error_user_register.password = false;
         }
       }
     },
-    handleRegisterRepeatPassword(){
-      if(!this.user.repeat_password){
-        this.error_user_register.repeat_password_content = "Vui lòng nhập password";
-        this.error_user_register.repeat_password =  true;
-      }else{
-        if(this.user.repeat_password.length< 6){
-          this.error_user_register.repeat_password_content = "Nhập ít nhất 6 kí tự";
+    handleRegisterRepeatPassword() {
+      if (!this.user.repeat_password) {
+        this.error_user_register.repeat_password_content =
+          "Vui lòng nhập password";
+        this.error_user_register.repeat_password = true;
+      } else {
+        if (this.user.repeat_password.length < 6) {
+          this.error_user_register.repeat_password_content =
+            "Nhập ít nhất 6 kí tự";
           this.error_user_register.repeat_password = true;
-        }else{
+        } else {
           this.error_user_register.repeat_password = false;
         }
       }
     },
-    handleRegisterEmail(){
-      if(!this.user.email){
+    handleRegisterEmail() {
+      if (!this.user.email) {
         this.error_user_register.email_content = "Vui lòng nhập email";
-        this.error_user_register.email =  true;
-      }else{
-        if(!this.user.email.includes('@')){
+        this.error_user_register.email = true;
+      } else {
+        if (!this.user.email.includes("@")) {
           this.error_user_register.email_content = "Nhập không đúng định dạng";
-          this.error_user_register.email =  true;
-        }else{
+          this.error_user_register.email = true;
+        } else {
           this.error_user_register.email = false;
         }
       }
-    }
+    },
   },
 };
 </script>

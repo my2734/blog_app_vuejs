@@ -18,7 +18,7 @@
                 <a href="about.html">About Us</a>
               </li>
               <li>
-                <router-link :to="{name: 'postblog'}">Post BLog</router-link>
+                <a style="cursor: pointer" @click="handleClickAdmin()">Admin</a>
               </li>
               <li class="btn-login" :class="{ addBtnLogin: !isBlack}">
                 <router-link :to="{name:'login'}">Login</router-link>
@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import 'vue-router'
 export default {
   name: "ModalApp",
   computed: {
@@ -54,6 +55,12 @@ export default {
     handleChangeBackground(){
       this.$store.state.statusBackground = !this.$store.state.statusBackground;
       // console.log(this.$store.state.statusBackground)
+    },
+    handleClickAdmin(){
+      this.$store.state.statusOverly = false;
+      this.$router.push({ path: '/post-blog' })
+      
+      // this.$route.push({name: 'postblog'})
     }
   }
 };

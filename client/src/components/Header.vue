@@ -1,4 +1,5 @@
 <template>
+   <div class="">
     <nav>
         <div class="logo">
             <a href="index.html">Gala<em>xy</em> </a>
@@ -17,6 +18,7 @@
             </div>
         </div>
     </div>
+   </div>
 </template>
 
 <script>

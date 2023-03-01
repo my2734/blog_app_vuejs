@@ -8,7 +8,31 @@ import PostBlog from '../views/main/PostBlog.vue'
 import PostCategory from '../views/main/PostCategory.vue'
 import PostTags from '../views/main/PostTags.vue'
 import ListPost from '../views/main/ListPost.vue'
+import UpdatePost from '../views/main/UpdatePost.vue'
 
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+const token = getCookie('token');
+console.log('token router.js');
+if(token != ""){
+  console.log('admin')
+}else{
+  console.log('home')
+}
 
 import DashboardLayout from '../layouts/dashboard.vue'
 const routes = [
@@ -28,14 +52,21 @@ const routes = [
         component: HomeApp
       },
       {
-        path: '/:id',
+        path: '/blog-detail/:id',
         name: 'blogdetail',
-        component: DetailApp
+        component: DetailApp,
+        params: true,
       },
       {
         path: '/post-blog',
         name: 'postblog',
-        component: PostBlog
+        get component(){
+          if(token != ""){
+            return PostBlog;
+          }else{
+            return HomeApp;
+          }
+        }
       },
       {
         path: '/post-category',
@@ -51,6 +82,12 @@ const routes = [
         path: '/list-post',
         name: 'listpost',
         component: ListPost
+      },
+      {
+        path: '/update-post/:id',
+        name: 'updatepost',
+        component: UpdatePost,
+        params: true
       },
     ]
   },

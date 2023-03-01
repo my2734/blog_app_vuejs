@@ -20,7 +20,7 @@
               </li>
               <li class="nav-item d-none d-sm-inline-block list-dashboard-item">
                 <router-link :to="{ name: 'postcategory' }" class="nav-link"
-                  >Add Category</router-link
+                  >Category</router-link
                 >
               </li>
               <li class="nav-item d-none d-sm-inline-block list-dashboard-item">
@@ -28,7 +28,7 @@
                   :to="{ name: 'posttags' }"
                   href="#"
                   class="nav-link"
-                  >Add Tags</router-link
+                  >Tags</router-link
                 >
               </li>
             </ul>
@@ -277,12 +277,19 @@ export default {
           .then((response) => {
             if (response.status == 200) {
               data.image = this.blog.image.name;
-              console.log(data);
 
               axios
                 .post("http://localhost:8080/api/post", data)
                 .then((response) => {
-                  console.log(response);
+                  // console.log(response);
+                  if (response.status == 200) {
+                    this.blog.name = "";
+                    this.blog.content = "";
+                    this.blog.image = "";
+                    this.blog.categories = [];
+                    this.blog.tags = [];
+                    this.blog.author = "";
+                  }
                 })
                 .catch((error) => {
                   console.log(error);
@@ -328,6 +335,8 @@ export default {
       .catch((error) => {
         console.log(error);
       });
+
+      
   },
 };
 </script>

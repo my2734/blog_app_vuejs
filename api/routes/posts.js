@@ -3,14 +3,26 @@ const router = express.Router()
 const Post = require('../models/Post')
 const User = require('../models/User')
 
-//store
+//limit
+router.get('/limit/:quanlity', async (req,res)=>{
+    try{
+        const quanlity = JSON.parse(req.params.quanlity);
+        const list_blog = await Post.find().limit(quanlity)
+        res.status(200).json(list_blog)
+    }catch(error){
+        console.log(error)
+        res.status(500).json(error)
+    }
+})
 
+//store
 router.post('/', async (req,res)=>{
     const newPost = await Post(req.body)
     try{
         const savedPost = await newPost.save()
         res.status(200).json(savedPost)
     }catch(error){
+        console.log(error)
         res.status(500).json(error)
     }
 })
@@ -66,6 +78,18 @@ router.get('/:id', async (req,res)=>{
         res.status(500).json('not found')
     }
 })
+
+//delete all 
+router.delete('/', async (req,res)=>{
+    try{
+        const savedDelete = await Post.deleteMany();
+        res.status(200).json('Delete successfully!')
+    }catch(error){
+        console.log(error)
+        res.status(500).json('not delete all')
+    }
+})
+
 
 module.exports = router
 

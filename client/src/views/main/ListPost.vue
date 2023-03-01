@@ -20,7 +20,7 @@
               </li>
               <li class="nav-item d-none d-sm-inline-block list-dashboard-item">
                 <router-link :to="{ name: 'postcategory' }" class="nav-link"
-                  >Add Category</router-link
+                  >Category</router-link
                 >
               </li>
               <li class="nav-item d-none d-sm-inline-block list-dashboard-item">
@@ -28,7 +28,7 @@
                   :to="{ name: 'posttags' }"
                   href="#"
                   class="nav-link"
-                  >Add Tags</router-link
+                  >Tags</router-link
                 >
               </li>
             </ul>
@@ -85,13 +85,13 @@
                       </td>
                       
                       <td>
-                        <button class="btn btn-warning">
+                        <button class="btn btn-warning" :to="{ path: '/update-post/'+post_item._id, params: { id: post_item._id }}">
                           <i
                             class="fa fa-pencil-square-o"
                             aria-hidden="true"
                           ></i>
                         </button>
-                        <button class="btn btn-danger">
+                        <button class="btn btn-danger" @click="handlerDeletePost(index,post_item._id)">
                           <i class="fa fa-trash" aria-hidden="true"></i>
                         </button>
                       </td>
@@ -132,6 +132,20 @@ export default {
       return this.$store.state.statusBackground;
     },
   },
+  methods:{
+    handlerDeletePost(index,id){
+      // console.log(index,id)
+      axios.delete('http://localhost:8080/api/post/'+id)
+      .then(response=>{
+        console.log(response)
+        if(response.status == 200){
+          this.list_post.splice(index,1)
+        }
+      }).catch(error=>{
+        console.log(error)
+      })
+    }
+  },
   mounted(){
     axios.get('http://localhost:8080/api/post')
     .then(response=>{
@@ -140,6 +154,8 @@ export default {
     .catch(error=>{
       console.log(error)
     })
+
+    
   }
 };
 </script>

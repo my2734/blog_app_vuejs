@@ -34,17 +34,45 @@ router.post('/register', async (req, res) => {
 router.post('/login' ,async (req,res)=>{
     const username = req.body.username
     try{
-        const user = await User.findOne({username: username})
-        !user && res.status(401).json('User not exist')
+        // const user = await User.findOne({username: username})
+        // // !user && res.status(401).json('User not exist')
+        // if(!user){
+        //     res.status(401).json('user not exist')
+        // }else{
+        //     res.status(200).json('User exist');
+        // }
 
-        const verify = await bcrypt.compare(req.body.password, user.password)
-        !verify && res.status(401).json('Password wrong')
-        const {password,...userInfo} = user._doc
-        const token = jwt.sign(userInfo, TOKEN_SERECT)
-        res.status(200).json(token)
+        // try{
+        //     const verify = await bcrypt.compare(req.body.password, user.password)
+        //     !verify && res.status(401).json('Password wrong')
+        //     const {password,...userInfo} = user._doc
+        //     const token = jwt.sign(userInfo, TOKEN_SERECT)
+        //     res.status(200).json(token)
+        // }catch(error){
+        //     res.status(401).json('Password wrong')
+        // }
+
+        const user = await User.findOne({username: username})
+        if(!user){
+            res.status(401).json('User not exist')
+        }else{
+            try{
+                const verify = await bcrypt.compare(req.body.password, user.password)
+                if(!verify){
+                    res.status(401).json('Password wrong')
+                }else{
+                    const {password,...userInfo} = user._doc
+                    const token = jwt.sign(userInfo, TOKEN_SERECT)
+                    res.status(200).json(token)
+                }
+            }catch(error){
+                res.status(500).json('verify error')
+            }
+
+        }
+
     }catch(error){
-        console.log(error)
-        res.status(500).json(error)
+        res.status(500).json('Not found user')
     }
 })
 

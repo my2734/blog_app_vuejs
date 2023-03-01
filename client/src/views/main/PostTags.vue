@@ -23,7 +23,7 @@
                   :to="{ name: 'postcategory' }"
                   href="#"
                   class="nav-link"
-                  >Add Category</router-link
+                  >Category</router-link
                 >
               </li>
               <li class="nav-item d-none d-sm-inline-block list-dashboard-item">
@@ -31,7 +31,7 @@
                   :to="{ name: 'posttags' }"
                   href="#"
                   class="nav-link"
-                  >Add Tags</router-link
+                  >Tags</router-link
                 >
               </li>
             </ul>
