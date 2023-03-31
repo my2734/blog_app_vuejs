@@ -317,7 +317,7 @@ export default {
       this.status_update = false;
     },
   },
-  mounted() {
+  created(){
     axios
       .get("http://localhost:8080/api/category")
       .then((response) => {
@@ -328,6 +328,9 @@ export default {
       .catch((error) => {
         console.log(error);
       });
+  },
+  mounted() {
+    
   },
 };
 </script>

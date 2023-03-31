@@ -9,30 +9,32 @@ import PostCategory from '../views/main/PostCategory.vue'
 import PostTags from '../views/main/PostTags.vue'
 import ListPost from '../views/main/ListPost.vue'
 import UpdatePost from '../views/main/UpdatePost.vue'
+import AboutApp from '../views/main/About.vue'
 
-function getCookie(cname) {
-  let name = cname + "=";
-  let decodedCookie = decodeURIComponent(document.cookie);
-  let ca = decodedCookie.split(';');
-  for(let i = 0; i <ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
-}
 
-const token = getCookie('token');
-console.log('token router.js');
-if(token != ""){
-  console.log('admin')
-}else{
-  console.log('home')
-}
+// function getCookie(cname) {
+//   let name = cname + "=";
+//   let decodedCookie = decodeURIComponent(document.cookie);
+//   let ca = decodedCookie.split(';');
+//   for(let i = 0; i <ca.length; i++) {
+//     let c = ca[i];
+//     while (c.charAt(0) == ' ') {
+//       c = c.substring(1);
+//     }
+//     if (c.indexOf(name) == 0) {
+//       return c.substring(name.length, c.length);
+//     }
+//   }
+//   return "";
+// }
+
+// const token = getCookie('token');
+// console.log('token router.js');
+// if(token != ""){
+//   console.log('admin')
+// }else{
+//   console.log('home')
+// }
 
 import DashboardLayout from '../layouts/dashboard.vue'
 const routes = [
@@ -52,6 +54,12 @@ const routes = [
         component: HomeApp
       },
       {
+        path: '/danh-muc/:id',
+        name: 'categoryHome',
+        component: HomeApp,
+        params:true,
+      },
+      {
         path: '/blog-detail/:id',
         name: 'blogdetail',
         component: DetailApp,
@@ -60,13 +68,7 @@ const routes = [
       {
         path: '/post-blog',
         name: 'postblog',
-        get component(){
-          if(token != ""){
-            return PostBlog;
-          }else{
-            return HomeApp;
-          }
-        }
+        component: PostBlog,
       },
       {
         path: '/post-category',
@@ -89,6 +91,12 @@ const routes = [
         component: UpdatePost,
         params: true
       },
+      {
+        path: '/about',
+        name: 'about',
+        component: AboutApp,
+        params: true
+      },
     ]
   },
   {
@@ -99,9 +107,12 @@ const routes = [
 ]
 
 
+
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+
+
 
 export default router

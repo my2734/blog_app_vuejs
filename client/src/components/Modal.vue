@@ -6,21 +6,21 @@
           <div class="main-menu">
             <ul>
               <li>
-                <a href="index.html">Home - Full-width</a>
+                <a @click="handlerClickHome($event)">Home</a>
               </li>
               <li>
-                <a href="masonry.html">Home - Masonry</a>
+                <a @click="handlerClickAbout($event)">About Us</a>
               </li>
-              <li>
-                <a href="grid.html">Home - Small-width</a>
-              </li>
-              <li>
-                <a href="about.html">About Us</a>
-              </li>
+              
               <li>
                 <a style="cursor: pointer" @click="handleClickAdmin()">Admin</a>
               </li>
-              <li class="btn-login" :class="{ addBtnLogin: !isBlack}">
+
+              <li v-if="auth.isAuthentication" class="btn-login" :class="{ addBtnLogin: !isBlack}">
+                <a @click="handlerLogout($event)">Logout</a>
+                
+              </li>
+              <li v-else class="btn-login" :class="{ addBtnLogin: !isBlack}">
                 <router-link :to="{name:'login'}">Login</router-link>
               </li>
               <li >
@@ -41,6 +41,8 @@
 
 <script>
 import 'vue-router'
+import { mapState } from 'vuex';
+// import axios from 'axios';
 export default {
   name: "ModalApp",
   computed: {
@@ -49,7 +51,9 @@ export default {
     },
     isBlack(){
     return this.$store.state.statusBackground;
-  }
+    },
+    ...mapState(['auth'])
+    
   },
   methods: {
     handleChangeBackground(){
@@ -58,9 +62,38 @@ export default {
     },
     handleClickAdmin(){
       this.$store.state.statusOverly = false;
-      this.$router.push({ path: '/post-blog' })
-      
-      // this.$route.push({name: 'postblog'})
+      if(this.$store.state.isAdmin == true){
+        this.$router.push({ name: 'postblog' })    
+      }else{
+        this.$router.push({ name: 'login' })    
+
+      }
+    },
+    handlerLogout(e){
+      e.preventDefault();
+      // //delete Token 
+      this.deleteCookie('token')
+      // //isAuthentication = false
+      this.$store.commit('TOGGLE_AUTH');
+      //isAdmin =  false
+      this.$store.state.isAdmin =  false
+      //login
+      this.$router.push({name: 'login'})
+    },
+    deleteCookie(name) {
+      document.cookie = name + '=;expires=' + new Date(1970, 0, 1).toUTCString() + ';path=/'
+    },
+    handlerClickHome(e){
+      e.preventDefault();
+      this.$router.push({name: "home"});
+      this.$store.state.statusOverly = false;
+      this.$store.state.statusModal = false;
+    },
+    handlerClickAbout(e){
+      e.preventDefault();
+      this.$router.push({name: "about"});
+      this.$store.state.statusOverly = false;
+      this.$store.state.statusModal = false;
     }
   }
 };
@@ -140,6 +173,10 @@ input:checked + .slider:before {
 .addBtnLogin{
   background-color: rgba(0,0,0,0.5);
   color: #fff;
+}
+
+.main-menu a{
+  cursor: pointer;
 }
 
 </style>

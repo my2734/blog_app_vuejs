@@ -58,7 +58,21 @@ export default{
         }
     },
    computed:{},
+   created(){
+        const id = this.$route.params.id;
+        axios.get('http://localhost:8080/api/post/'+id)
+        .then(response=>{
+            this.blogdetail = response.data;
+            console.log(this.blogdetail);
+        })
+        .catch(error=>{
+            console.log(error)
+        })
+   },
     mounted(){
+       
+    },
+    updated(){
         const id = this.$route.params.id;
         axios.get('http://localhost:8080/api/post/'+id)
         .then(response=>{

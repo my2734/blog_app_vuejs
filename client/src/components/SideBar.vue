@@ -13,20 +13,7 @@
           />
         </fieldset>
       </div>
-      <div class="archives">
-        <div class="sidebar-heding">
-          <h2>Archives</h2>
-        </div>
-        <ul>
-          <li><a href="#">> 2018 September (4)</a></li>
-          <li><a href="#">> 2018 August (16)</a></li>
-          <li><a href="#">> 2018 July (5)</a></li>
-          <li><a href="#">> 2018 May (3)</a></li>
-          <li><a href="#">> 2018 February (27)</a></li>
-          <li><a href="#">> 2017 December (18)</a></li>
-          <li><a href="#">> 2017 November (12)</a></li>
-        </ul>
-      </div>
+     
       <div class="recent-posts">
         <div class="sidebar-heding">
           <h2>Recent Posts</h2>
@@ -55,7 +42,7 @@
         </div>
         <ul>
           <li v-for="category_item in list_category" :key="category_item.name">
-            <a href="#"
+            <a @click="handlerClickCategory(category_item._id,$event)"
               >> {{ category_item.name }} ({{ category_item.quantity }})</a
             >
           </li>
@@ -91,11 +78,15 @@ export default {
     };
   },
   methods:{
+    handlerClickCategory(id,e){
+      e.preventDefault()
+      this.$router.push({ name: 'categoryHome', params: { id: id } })
+    },
     handlerClickDetailPage(id){
       this.$router.push({ name: 'blogdetail', params: { id: id } })
     }
   },
-  mounted() {
+  created(){
     const getListBlog = async () => {
       try {
         const response = await axios.get("http://localhost:8080/api/post");
@@ -151,6 +142,9 @@ export default {
     };
 
     getListBlogLimit8();
+  },
+  mounted() {
+    
   },
 };
 </script>

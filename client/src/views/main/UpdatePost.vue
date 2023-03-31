@@ -184,7 +184,7 @@
               <div class="col-sm-2"></div>
               <div class="col-sm-10 text-center">
                 <button
-                  @click="handleSumitBlog()"
+                  @click="handleUpdateBlog()"
                   class="btn-login"
                   :class="{ addBtnLogin: !isBlack }"
                 >
@@ -246,16 +246,15 @@
           this.isError = true;
         }
         //image
-        if (!this.blog.image.name) {
-          this.error.image = true;
-          this.isError = true;
-        }
+        // if (!this.blog.image.name) {
+        //   this.error.image = true;
+        //   this.isError = true;
+        // }
       },
-      handleSumitBlog() {
+      handleUpdateBlog() {
         var data = {
           name: this.blog.name,
           content: this.blog.content,
-          image: "",
           author: this.blog.author,
           categories: this.blog.categories,
           tags: this.blog.tags,
@@ -264,8 +263,10 @@
         this.validate();
   
         if (!this.isError) {
-          axios
-            .post(
+          //co upload image
+          if(this.blog.image){
+            axios
+            .post( //upload new image
               "http://localhost:8080/api/upload",
               { file: this.blog.image },
               {
@@ -279,16 +280,10 @@
                 data.image = this.blog.image.name;
   
                 axios
-                  .post("http://localhost:8080/api/post", data)
+                  .put("http://localhost:8080/api/post/"+this.$route.params.id, data)
                   .then((response) => {
-                    // console.log(response);
-                    if (response.status == 200) {
-                      this.blog.name = "";
-                      this.blog.content = "";
-                      this.blog.image = "";
-                      this.blog.categories = [];
-                      this.blog.tags = [];
-                      this.blog.author = "";
+                    if(response.status == 200){
+                      this.$router.push({name: "listpost"})
                     }
                   })
                   .catch((error) => {
@@ -299,6 +294,19 @@
             .catch((error) => {
               console.log(error);
             });
+          }else{ //khong upload image
+            axios
+                  .put("http://localhost:8080/api/post/"+this.$route.params.id, data)
+                  .then((response) => {
+                    if(response.status == 200){
+                      this.$router.push({name: "listpost"})
+                    }
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  });
+          }
+         
         } else {
           console.log("can not store blog");
         }
@@ -315,7 +323,7 @@
         this.error.image = false;
       },
     },
-    mounted() {
+    created(){
       axios
         .get("http://localhost:8080/api/category")
         .then((response) => {
@@ -346,11 +354,13 @@
                 this.blog.content = response.data.content;
                 this.blog.categories = response.data.categories;
                 this.blog.tags = response.data.tags;
-                this.blog.image = response.data.image;
             }
         }).catch(error => {
             console.log(error)
         })
+    },
+    mounted() {
+      
     },
   };
   </script>

@@ -2,7 +2,7 @@
    <div class="">
     <nav>
         <div class="logo">
-            <a href="index.html">Gala<em>xy</em> </a>
+            <router-link :to="{name: 'home'}" >Trav<em>el</em> Blog</router-link>
             
         </div>
         

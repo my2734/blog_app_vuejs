@@ -32,7 +32,8 @@ router.get('/', async (req,res)=>{
 //get detail
 router.get('/:id',async (req,res)=>{
     try{
-        const tags = await Tags.findOne({id: req.params.id})
+        const id = req.params.id
+        const tags = await Tags.findById(id)
         res.status(200).json(tags)
     }catch(error){
         console.log(error)

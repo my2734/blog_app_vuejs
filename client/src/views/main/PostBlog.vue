@@ -277,7 +277,7 @@ export default {
           .then((response) => {
             if (response.status == 200) {
               data.image = this.blog.image.name;
-
+              console.log(this.blog.image);
               axios
                 .post("http://localhost:8080/api/post", data)
                 .then((response) => {
@@ -290,6 +290,7 @@ export default {
                     this.blog.tags = [];
                     this.blog.author = "";
                   }
+                  this.$router.push({ name: 'listpost' })
                 })
                 .catch((error) => {
                   console.log(error);
@@ -311,11 +312,10 @@ export default {
     },
     uploadFile() {
       this.blog.image = this.$refs.file.files[0];
-      // console.log(this.blog.image.name)
       this.error.image = false;
     },
   },
-  mounted() {
+  created(){
     axios
       .get("http://localhost:8080/api/category")
       .then((response) => {
@@ -336,6 +336,9 @@ export default {
         console.log(error);
       });
 
+  },
+  mounted() {
+    
       
   },
 };

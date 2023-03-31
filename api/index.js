@@ -9,6 +9,9 @@ const tagsRouter = require('./routes/tags')
 const multer = require('multer')
 const path = require('path')
 const cors = require('cors')
+const User = require('./models/User')
+const jwt = require('jsonwebtoken')
+require('dotenv').config()
 
 mongoose.set("strictQuery", true);
 mongoose.connect('mongodb://127.0.0.1:27017/blog_app3')
@@ -29,10 +32,7 @@ var storage = multer.diskStorage({
       cb(null, 'images')
     },
     filename: function (req, file, cb) {
-        const ext = file.mimetype.split("/")[1];
-        const clientName = file.originalname.split(".")[0]
-        const filename = clientName+'.'+ext
-        cb(null, filename);
+        cb(null, file.originalname);
     }
   })
    
@@ -40,6 +40,18 @@ var storage = multer.diskStorage({
 
 app.post('/api/upload', upload.single("file"), (req,res)=> {
     res.status(200).json('Upload image success')
+})
+
+app.get('/api/isAdmin/:token',(req,res)=>{
+    const token = req.params.token
+    const TOKEN_SERECT = process.env.TOKEN_SERECT
+    const data = jwt.verify(token, TOKEN_SERECT);
+    console.log(data)
+    if(data.role == 0){
+        res.status(200).json('true')
+    }else{
+        res.status(200).json('false')
+    }
 })
 
 app.use('/api/auth', authRouter)

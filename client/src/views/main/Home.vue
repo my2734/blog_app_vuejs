@@ -24,7 +24,7 @@
                   {{ post_item.content }}
                 </p>
                 <div class="simple-btn">
-                  <a style="cusor: pointer" @click="handlerClickBlogDetail(post_item._id)"
+                  <a style="cursor: pointer" @click="handlerClickBlogDetail(post_item._id)"
                     >continue reading</a
                   >
                 </div>
@@ -54,15 +54,48 @@ export default {
       list_post: [],
     };
   },
-  mounted() {
+  created(){
+    console.log("function created")
     axios
-      .get("http://localhost:8080/api/post")
+      .get("http://localhost:8080/api/post?page=1")
       .then((response) => {
         this.list_post = response.data;
       })
       .catch((error) => {
         console.log(error);
       });
+  },
+  mounted() {
+    console.log('function mounted')
+  },
+  updated(){
+    console.log('function updated')
+    const categoryId =  this.$route.params.id;
+    if(categoryId){
+      this.list_post = []
+      axios
+      .get("http://localhost:8080/api/post?page=2")
+      .then((response) => {
+        this.list_post = response.data;
+        // console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    }
+    // if(categoryId){
+
+    //   // this.list_post = []
+    //   axios
+    //   .get("http://localhost:8080/api/post")
+    //   .then((response) => {
+    //     // this.list_post = response.data;
+    //     console.log(response.data);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+    // }
   },
   methods: {
     handlerClickBlogDetail(id) {

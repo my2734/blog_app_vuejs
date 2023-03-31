@@ -243,9 +243,11 @@ export default {
       this.status_update = false;
     },
     handleGetDetail(id, index) {
+     
       axios
         .get("http://localhost:8080/api/tags/" + id)
         .then((response) => {
+          console.log(response.data)
           if (response.status == 200) {
             this.status_update = true;
             this.tags_update.name = response.data.name;
@@ -295,7 +297,7 @@ export default {
       this.status_update = false;
     },
   },
-  mounted() {
+  created(){
     axios
       .get("http://localhost:8080/api/tags")
       .then((response) => {
@@ -306,6 +308,9 @@ export default {
       .catch((error) => {
         console.log(error);
       });
+  },
+  mounted() {
+    
   },
 };
 </script>

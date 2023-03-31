@@ -52,6 +52,32 @@
               <div class="card-header">
                 <h3 class="card-title">Bordered Table</h3>
               </div>
+              <!-- Modal -->
+              <div v-if="modal_data.status">
+                <transition name="modal">
+                  <div class="modal-mask">
+                    <div class="modal-wrapper">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title">Modal title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true" @click="showModal = false">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <p>Are you sure you want to delete?</p>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @click="showModal = false">Close</button>
+                            <button type="button" @click="handlerDeletePost(modal_data.index,modal_data.id)" class="btn btn-primary">Sure</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </transition>
+              </div>
               <!-- /.card-header -->
               <div class="card-body">
                 <table class="table table-bordered">
@@ -85,15 +111,19 @@
                       </td>
                       
                       <td>
-                        <button class="btn btn-warning" :to="{ path: '/update-post/'+post_item._id, params: { id: post_item._id }}">
+                        <button class="btn btn-warning" @click="handlerUpdatePost(post_item._id)">
                           <i
                             class="fa fa-pencil-square-o"
                             aria-hidden="true"
                           ></i>
                         </button>
-                        <button class="btn btn-danger" @click="handlerDeletePost(index,post_item._id)">
+                        <!-- <button class="btn btn-danger" @click="handlerDeletePost(index,post_item._id)">
+                          <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button> -->
+                        <button class="btn btn-danger" @click="handlerShowModal(index,post_item._id)">
                           <i class="fa fa-trash" aria-hidden="true"></i>
                         </button>
+                         
                       </td>
                     </tr>
                   </tbody>
@@ -124,7 +154,12 @@ export default {
   name: "ListPost",
   data(){
     return{
-      list_post : []
+      list_post : [],
+      modal_data: {
+        status: false,
+        index: -1,
+        id: -1,
+      }
     }
   },
   computed: {
@@ -140,22 +175,35 @@ export default {
         console.log(response)
         if(response.status == 200){
           this.list_post.splice(index,1)
+          this.modal_data.status = false
+          this.modal_data.id = -1
+          this.modal_data.index = -1
         }
       }).catch(error=>{
         console.log(error)
       })
+    },
+    handlerUpdatePost(id){
+      this.$router.push({name: 'updatepost', 
+    params: { id: id }})
+    },
+    handlerShowModal(index,id){
+      this.modal_data.index = index
+      this.modal_data.id = id
+      this.modal_data.status = true
     }
   },
-  mounted(){
+  created(){
     axios.get('http://localhost:8080/api/post')
     .then(response=>{
       this.list_post = response.data;
+      console.log(this.list_post);
     })
     .catch(error=>{
       console.log(error)
     })
-
-    
+  },
+  mounted(){ 
   }
 };
 </script>
@@ -237,4 +285,9 @@ export default {
   line-clamp: 4;
   -webkit-box-orient: vertical;
 }
+
+.modal-content{
+  background-color: #171B1D;
+}
+
 </style>

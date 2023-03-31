@@ -61,6 +61,29 @@ router.delete('/:id', async (req,res)=>{
 
 //get all
 router.get('/', async (req,res)=>{
+    const page = parseInt(req.query.page)
+    const PAGE_SIZE = 2
+    const start = (page-1)*PAGE_SIZE
+    if(page){
+        try{
+            const posts = await Post.find().skip(start).limit(PAGE_SIZE)
+            res.status(200).json(posts)
+        }catch(error){
+            res.status(500).json(error)
+        } 
+    }else{
+        try{
+            const posts = await Post.find()
+            res.status(200).json(posts)
+        }catch(error){
+            res.status(500).json(error)
+        }
+    }
+})
+
+
+//get category
+router.get('/category', async (req,res)=>{
     try{
         const posts = await Post.find()
         res.status(200).json(posts)

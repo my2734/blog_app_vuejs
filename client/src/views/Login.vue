@@ -76,6 +76,7 @@
           </div>
 
           <div class="sign-up-htm">
+            <h5 v-if="show_message_register">Register sucess. Now Login!</h5>
             <div class="group">
               <label for="user" class="label">Username</label>
               <input
@@ -163,6 +164,7 @@ export default {
   name: "LoginApp",
   data() {
     return {
+      show_message_register: false,
       user: {
         username: "",
         email: "",
@@ -193,7 +195,7 @@ export default {
       isErrorLogin: false,
     };
   },
-  methods: {
+  methods: { 
     handleBackGoHome() {
       this.$store.state.statusOverly = false;
       this.$router.push({ path: "/" });
@@ -211,7 +213,13 @@ export default {
       axios
         .post("http://localhost:8080/api/auth/register", data)
         .then((response) => {
-          console.log(response.data);
+          if(response.status ==200){
+            this.user.username = ""
+            this.user.email = ""
+            this.user.password = ""
+            this.user.repeat_password = ""
+            this.show_message_register = true;
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -237,6 +245,18 @@ export default {
           this.setCookie("token", token, '3d');
           this.user_login.username=""
           this.user_login.password=""
+          axios.get("http://localhost:8080/api/isAdmin/"+token)
+            .then((response)=>{
+              if(response.status == 200){
+                  this.$store.commit('TOGGLE_AUTH')
+                // if(response.data == "true"){
+                // this.$store.state.isAdmin = true;
+                // }else{
+                //   this.$store.state.isAdmin = false;
+                // }
+                // this.$store.state.isAuthentication = true;
+              }              
+            })
           this.$router.push({name: 'home'})
         })
         .catch(() => {
