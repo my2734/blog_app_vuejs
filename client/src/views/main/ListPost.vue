@@ -60,8 +60,7 @@
                       <div class="modal-dialog" role="document">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h5 class="modal-title">Modal title</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button style="background-color: white;padding: 10px;" @click="handlerClickCloseModal()" type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true" @click="showModal = false">&times;</span>
                             </button>
                           </div>
@@ -69,7 +68,7 @@
                             <p>Are you sure you want to delete?</p>
                           </div>
                           <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" @click="showModal = false">Close</button>
+                            <button style="color: black;" type="button" class="btn btn-secondary" @click="handlerClickCloseModal()">Close</button>
                             <button type="button" @click="handlerDeletePost(modal_data.index,modal_data.id)" class="btn btn-primary">Sure</button>
                           </div>
                         </div>
@@ -120,7 +119,7 @@
                         <!-- <button class="btn btn-danger" @click="handlerDeletePost(index,post_item._id)">
                           <i class="fa fa-trash" aria-hidden="true"></i>
                         </button> -->
-                        <button class="btn btn-danger" @click="handlerShowModal(index,post_item._id)">
+                        <button style="margin-left: 10px" class="btn btn-danger" @click="handlerShowModal(index,post_item._id)">
                           <i class="fa fa-trash" aria-hidden="true"></i>
                         </button>
                          
@@ -168,6 +167,9 @@ export default {
     },
   },
   methods:{
+    handlerClickCloseModal(){
+      this.modal_data.status = false
+    },  
     handlerDeletePost(index,id){
       // console.log(index,id)
       axios.delete('http://localhost:8080/api/post/'+id)

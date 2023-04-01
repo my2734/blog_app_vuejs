@@ -33,12 +33,19 @@
           </div>
           <div class="col-md-12">
             <ul class="page-number">
+              <li v-for="item in length_page" :key="item"><a @click="handlerClickPagination(item)">{{ (item) }}</a></li>
+              <!-- <li><a href="#">></a></li> -->
+            </ul>
+          </div>
+          <!-- <div class="col-md-12">
+            <ul class="page-number">
               <li class="active"><a href="#">1</a></li>
               <li><a href="#">2</a></li>
               <li><a href="#">3</a></li>
               <li><a href="#">></a></li>
             </ul>
           </div>
+          <h1>{{ length_blog }}</h1> -->
         </div>
       </div>
     </div>
@@ -47,29 +54,33 @@
   <script>
 import axios from "axios";
 import "vue-router";
+import { mapActions } from "vuex";
 export default {
   name: "HomeApp",
   data() {
     return {
-      list_post: [],
+      // list_post: [],
     };
   },
+ computed: {
+  list_post(){
+    return this.$store.state.list_post;
+  },
+  // length_all_blog(){
+  //   return this.$store.state.length_all_blog
+  // },
+  length_page(){
+    const quantity_blog =  this.$store.state.length_all_blog
+    return Math.ceil(quantity_blog/2)
+  }
+ },
   created(){
-    console.log("function created")
-    axios
-      .get("http://localhost:8080/api/post?page=1")
-      .then((response) => {
-        this.list_post = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    this.getListPost(1)
+    this.get_length_all_blog()
   },
   mounted() {
-    console.log('function mounted')
   },
   updated(){
-    console.log('function updated')
     const categoryId =  this.$route.params.id;
     if(categoryId){
       this.list_post = []
@@ -83,24 +94,16 @@ export default {
         console.log(error);
       });
     }
-    // if(categoryId){
-
-    //   // this.list_post = []
-    //   axios
-    //   .get("http://localhost:8080/api/post")
-    //   .then((response) => {
-    //     // this.list_post = response.data;
-    //     console.log(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-    // }
+    
   },
   methods: {
     handlerClickBlogDetail(id) {
       this.$router.push({ name: "blogdetail" , params: { id: id } });
     },
+    handlerClickPagination(page){
+      this.getListPost(page)
+    },  
+    ...mapActions(['getListPost','get_length_all_blog'])
   },
 };
 </script>

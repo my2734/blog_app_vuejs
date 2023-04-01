@@ -10,10 +10,10 @@ router.get('/limit/:quanlity', async (req,res)=>{
         const list_blog = await Post.find().limit(quanlity)
         res.status(200).json(list_blog)
     }catch(error){
-        console.log(error)
         res.status(500).json(error)
     }
 })
+
 
 //store
 router.post('/', async (req,res)=>{
@@ -61,17 +61,69 @@ router.delete('/:id', async (req,res)=>{
 
 //get all
 router.get('/', async (req,res)=>{
+    const searchByCat = req.query.category
     const page = parseInt(req.query.page)
     const PAGE_SIZE = 2
+    const searchKey = req.query.searchKey
     const start = (page-1)*PAGE_SIZE
-    if(page){
+    if(page && searchByCat){
+        try{
+            let list_post = []
+            const posts = await Post.find()
+            var length = 0;
+            posts.forEach((post)=>{
+                if(post.categories.map(cat=>cat.toLowerCase()).includes(searchByCat.toLowerCase())){
+                    if(list_post.length < 2*page){
+                        list_post.push(post)
+                    }
+                    length++;
+                }
+            })
+            res.status(200).json({
+                list_post: list_post,
+                length: length
+            })
+        }catch(error){
+            res.status(200).json(error)
+        }
+    }else if(page){
         try{
             const posts = await Post.find().skip(start).limit(PAGE_SIZE)
             res.status(200).json(posts)
         }catch(error){
             res.status(500).json(error)
         } 
-    }else{
+    }else if(searchByCat){
+        try{
+            let list_post = []
+            const posts = await Post.find()
+            // posts.filter(post => post.categories.map(cat=>cat.toLowerCase()).includes(searchByCat.toLowerCase()));
+            posts.forEach(post=>{
+                if(post.categories.map(cat=>cat.toLowerCase()).includes(searchByCat.toLowerCase())){
+                    list_post.push(post);
+                }
+            })
+            res.status(200).json(list_post)
+        }catch(error){
+            res.status(200).json(error)
+        }
+    }else if(searchKey){
+        try{
+            let list_post = []
+            const posts = await Post.find()
+            console.log(searchKey.toLowerCase())
+            posts.forEach((post)=>{
+                if(post.name.toLowerCase().includes(searchKey.toLowerCase())){
+                    list_post.push(post)
+                }
+            })
+            res.status(200).json(list_post)
+        }catch(error){
+            console.log(error)
+            res.status(500).json(error)
+        }
+    }
+    else{
         try{
             const posts = await Post.find()
             res.status(200).json(posts)
@@ -112,6 +164,7 @@ router.delete('/', async (req,res)=>{
         res.status(500).json('not delete all')
     }
 })
+
 
 
 module.exports = router

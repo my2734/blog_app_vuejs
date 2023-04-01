@@ -49,6 +49,32 @@
           </ol>
         </div>
 
+        <!-- Modal -->
+        <div v-if="modal_data.status">
+          <transition name="modal">
+            <div class="modal-mask">
+              <div class="modal-wrapper">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button style="background-color: white;" @click="handlerClickCloseModal()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" @click="showModal = false">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <p>Are you sure you want to delete?</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button style="color: black;" type="button" class="btn btn-secondary" @click="handlerClickCloseModal()">Close</button>
+                      <button type="button" @click="handleDeleteTags(modal_data.index,modal_data.id)" class="btn btn-primary">Sure</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </transition>
+        </div>
+
         <div v-if="!status_update" class="row">
           <div class="col-md-12">
             <label for="" class="col-sm-2 col-form-label">Name:</label>
@@ -170,10 +196,13 @@
                         >
                           Update
                         </button>
-                        <button
+                        <!-- <button
                           @click="handleDeleteTags(category_item._id, index)"
                           class="btn btn-danger"
                         >
+                          Delete
+                        </button> -->
+                        <button @click="handlerClickShowModal(category_item._id,index)" class="btn btn-danger">
                           Delete
                         </button>
                       </td>
@@ -210,9 +239,17 @@ export default {
         index: null,
         id: "",
       },
+      modal_data: {
+        status: false,
+        index: -1,
+        id: -1,
+      }
     };
   },
   methods: {
+    handlerClickCloseModal(){
+      this.modal_data.status = false
+    },  
     validate() {
       if (this.category_name.length == 0) {
         this.isError = true;
@@ -229,6 +266,11 @@ export default {
       } else {
         this.isError = false;
       }
+    },
+    handlerClickShowModal(index,id){
+      this.modal_data.index = index
+      this.modal_data.id = id
+      this.modal_data.status = true
     },
     handleKeyUpUpdate(){
       if(this.category_update.name.length == 0){
@@ -260,7 +302,8 @@ export default {
         .delete("http://localhost:8080/api/category/" + id)
         .then((response) => {
           if (response.status == 200) {
-            this.list_category.splice(index, 1);
+            this.list_category.splice(index, 1)
+            this.modal_data.status = false
           }
         })
         .catch((error) => {

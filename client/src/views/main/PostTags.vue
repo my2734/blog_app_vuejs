@@ -49,6 +49,32 @@
           </ol>
         </div>
 
+                <!-- Modal -->
+                <div v-if="modal_data.status">
+                  <transition name="modal">
+                    <div class="modal-mask">
+                      <div class="modal-wrapper">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button style="background-color: white;padding: 10px;" @click="handlerClickCloseModal()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true" @click="showModal = false">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <p>Are you sure you want to delete?</p>
+                            </div>
+                            <div class="modal-footer">
+                              <button style="color: black;" type="button" class="btn btn-secondary" @click="handlerClickCloseModal()">Close</button>
+                              <button type="button" @click="handleDeleteTags(modal_data.index,modal_data.id)" class="btn btn-primary">Sure</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </transition>
+                </div>
+
         <div v-if="status_update == false" class="row">
           <div class="col-md-12">
             <label for="" class="col-sm-2 col-form-label">Name:</label>
@@ -169,12 +195,13 @@
                         >
                           Update
                         </button>
-                        <button
+                        <!-- <button
                           @click="handleDeleteTags(tags_item._id, index)"
                           class="btn btn-danger"
                         >
                           Delete
-                        </button>
+                        </button> -->
+                        <button class="btn btn-danger" @click="handlerShowModal(tags_item._id, index)">Delete</button>
                       </td>
                     </tr>
                   </tbody>
@@ -210,9 +237,22 @@ export default {
         name: "",
         index: null,
       },
+      modal_data: {
+        status: false,
+        index: -1,
+        id: -1,
+      }
     };
   },
   methods: {
+    handlerClickCloseModal(){
+      this.modal_data.status = false
+    },  
+    handlerShowModal(id, index){
+      this.modal_data.status = true
+      this.modal_data.index = index
+      this.modal_data.id = id
+    },
     handleSubmitTags() {
       if (!this.tags) {
         this.isError = true;
@@ -236,6 +276,7 @@ export default {
         .delete("http://localhost:8080/api/tags/" + id)
         .then((response) => {
           response.status == 200 && this.list_tags.splice(index, 1);
+          this.modal_data.status =  true
         })
         .catch((error) => {
           console.log(error);

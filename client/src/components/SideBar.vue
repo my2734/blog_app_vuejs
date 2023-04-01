@@ -4,14 +4,13 @@
       <div class="search">
         <fieldset>
           <input
-            name="search"
-            type="text"
             class="form-control"
-            id="search"
             placeholder="Search..."
             required=""
+            v-model="search"
           />
         </fieldset>
+        <span @click="handlerClickSearch()" class="btn-login" style="margin-top: 20px;">Search</span>
       </div>
      
       <div class="recent-posts">
@@ -42,7 +41,7 @@
         </div>
         <ul>
           <li v-for="category_item in list_category" :key="category_item.name">
-            <a @click="handlerClickCategory(category_item._id,$event)"
+            <a @click="handlerClickCategory(category_item.name,$event)"
               >> {{ category_item.name }} ({{ category_item.quantity }})</a
             >
           </li>
@@ -54,7 +53,7 @@
         </div>
         <ul>
           <li v-for="blog in list_limit_blog8" :key="blog._id">
-            <a href="#">
+            <a  @click="handlerClickDetailPage(blog._id)">
               <img :src="'http://localhost:8080/images/' + blog.image" alt="" />
             </a>
           </li>
@@ -67,6 +66,7 @@
 
 <script>
 import axios from "axios";
+import { mapActions } from "vuex";
 export default {
   name: "SideBarApp",
   data() {
@@ -75,16 +75,25 @@ export default {
       list_category: [],
       list_limit_blog3: [],
       list_limit_blog8: [],
+      search: ""
     };
   },
   methods:{
-    handlerClickCategory(id,e){
+    handlerClickSearch(){
+      const keySearch = this.search
+      this.getListPostBySearch(keySearch)
+      // this.get_length_all_blog()
+      this.$router.push({name: 'home'})
+    },  
+    handlerClickCategory(name,e){
       e.preventDefault()
-      this.$router.push({ name: 'categoryHome', params: { id: id } })
+      this.$router.push({name: "home"})
+      this.getListPostCategory(name)
     },
     handlerClickDetailPage(id){
       this.$router.push({ name: 'blogdetail', params: { id: id } })
-    }
+    },
+    ...mapActions(['getListPost','getListPostCategory','getListPostBySearch']),
   },
   created(){
     const getListBlog = async () => {

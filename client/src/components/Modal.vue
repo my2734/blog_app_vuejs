@@ -62,7 +62,7 @@ export default {
     },
     handleClickAdmin(){
       this.$store.state.statusOverly = false;
-      if(this.$store.state.isAdmin == true){
+      if(this.$store.state.auth.isAuthentication == true){
         this.$router.push({ name: 'postblog' })    
       }else{
         this.$router.push({ name: 'login' })    

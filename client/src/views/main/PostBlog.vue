@@ -63,7 +63,7 @@
               <div style="margin-bottom: 10px">
                 <transition name="slide-fade">
                   <span v-show="error.name" class="text-danger"
-                    >*Vui lòng nhập nội dung Tags*</span
+                    >*Vui lòng nhập nội dung tên bài viết*</span
                   >
                 </transition>
               </div>
@@ -109,7 +109,7 @@
               <div style="margin-bottom: 10px">
                 <transition name="slide-fade">
                   <span v-show="error.author" class="text-danger"
-                    >*Vui lòng nhập nội dung Tags*</span
+                    >*Vui lòng nhập nội dung danh mục*</span
                   >
                 </transition>
               </div>
@@ -155,7 +155,7 @@
               <div style="margin-top: 10px; margin-bottom: 10px">
                 <transition name="slide-fade">
                   <span v-show="error.image" class="text-danger"
-                    >*Vui lòng nhập nội dung Tags*</span
+                    >*Vui lòng nhập nội dung hình ảnh*</span
                   >
                 </transition>
               </div>
@@ -175,7 +175,7 @@
               </fieldset>
               <transition name="slide-fade">
                 <span v-show="error.content" class="text-danger"
-                  >*Vui lòng nhập nội dung Tags*</span
+                  >*Vui lòng nhập nội dung nội dung*</span
                 >
               </transition>
             </div>
