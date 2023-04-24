@@ -56,7 +56,7 @@
                   v-model="blog.name"
                   type="text"
                   class="form-control custom-input"
-                  placeholder="Your name12343.."
+                  placeholder="Nhập tên blog"
                   v-on:keyup="error.name = false"
                 />
               </fieldset>
@@ -103,7 +103,7 @@
                   v-on:keyup="error.author = false"
                   type="text"
                   class="form-control custom-input"
-                  placeholder="Your name..."
+                  placeholder="Nhập tên tác giả"
                 />
               </fieldset>
               <div style="margin-bottom: 10px">
@@ -168,9 +168,9 @@
                 <textarea
                   v-model="blog.content"
                   @keyup="error.content = false"
-                  rows="6"
-                  class="form-control custom-input"
-                  placeholder="Your message..."
+                  rows="10"
+                  class="form-control"
+                  placeholder="Nội dung..."
                 ></textarea>
               </fieldset>
               <transition name="slide-fade">

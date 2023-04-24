@@ -28,7 +28,13 @@ const PostSchema = new mongoose.Schema({
     tags: {
         type: Array,
         required: false,
-    }
+    },
+    comment: [
+        {
+            username: String,
+            content: String
+        }
+    ]
 },{
     timestamps: true
 })

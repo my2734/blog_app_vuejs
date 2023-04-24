@@ -23,6 +23,8 @@
 
 <script>
 import { mapActions } from 'vuex';
+import axios from 'axios'
+import store from '@/store'
 export default{
     name: "HeaderApp",
     data(){
@@ -42,7 +44,42 @@ export default{
             this.get_length_all_blog()
             this.$router.push({name: 'home'})
         },
-        ...mapActions(['getListPost','get_length_all_blog'])
+        ...mapActions(['getListPost','get_length_all_blog']),
+        getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for(let i = 0; i <ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+    },
+    created(){
+        const token = this.getCookie('token')
+        if(token){
+            axios.post('http://localhost:8080/api/verify',{token:token})
+            .then(response=>{
+                if(response.status == 200){
+                    if(response.data.role == 0){
+                        store.commit('UPDATE_ADMIN',true)
+                    }
+                    store.commit('UPDATE_AUTH',true)
+                    store.commit('UPDATE_AUTH_USERNAME',response.data.username)
+                }
+            })
+            .catch(()=>{
+                console.log('Loi verify user')
+            })
+        }
+
+       
     }
 }
 </script>

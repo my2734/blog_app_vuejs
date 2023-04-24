@@ -165,6 +165,69 @@ router.delete('/', async (req,res)=>{
     }
 })
 
+//add comment 
+router.post('/comment/:id',async (req,res)=>{
+    const id = req.params.id
+    try{
+        const comment = {
+            username: req.body.username,
+            content: req.body.content
+        }
+        const blog = await Post.findById(id)
+        blog.comment.push(comment)
+        const result = await blog.save()
+        res.status(200).json(result)
+    }catch(error){
+        console.log('Loi server')
+    }
+})
+//delete comment 
+router.delete('/comment/:id',async (req,res)=>{
+    const id_blog = req.params.id //id blog
+    const id_comment = req.query.id_comment
+    try{
+        const blog = await Post.findById(id_blog)
+        // const id_comment = req.body.id // id comment
+        blog.comment =  blog.comment.filter(comment => comment._id != id_comment)
+        const result = await blog.save()
+        res.status(200).json(result)
+    }catch(error){
+        res.status(500).json("Loi server")
+    }
+}
+)
+
+//update comment 
+router.put('/comment/:id',async (req,res)=>{
+    const id = req.params.id
+    try{
+        const blog = await Post.findById(id)
+        const id_comment = req.body.id
+        blog.comment =  blog.comment.map((comment)=>{
+            if(comment._id == id_comment){
+                comment.content = req.body.content
+            }
+            return comment
+        })
+        const result = await blog.save()
+        res.status(200).json(result)
+    }catch(error){
+        res.status(500).json('Loi server')
+    }
+})
+//get comment 
+router.get('/comment/:id',async (req,res)=>{
+    const blog_id = req.params.id
+    const comment_id = req.query.id_comment
+    try{
+        const blog = await Post.findById(blog_id)
+        const comment_result = blog.comment.find(comment => comment._id == comment_id)
+        res.status(200).json(comment_result)
+    }catch(error){
+        res.status(500).json('Loi server')
+    }
+})
+
 
 
 module.exports = router

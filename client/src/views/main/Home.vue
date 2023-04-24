@@ -9,7 +9,7 @@
             :key="post_item._id"
           >
             <div class="blog-post">
-              <img
+              <img v-if="post_item.image"
                 :src="'http://localhost:8080/images/' + post_item.image"
                 alt=""
               />
@@ -33,19 +33,11 @@
           </div>
           <div class="col-md-12">
             <ul class="page-number">
-              <li v-for="item in length_page" :key="item"><a @click="handlerClickPagination(item)">{{ (item) }}</a></li>
+              <li style="cursor:pointer;" v-for="item in length_page" :key="item"><a @click="handlerClickPagination(item)">{{ (item) }}</a></li>
               <!-- <li><a href="#">></a></li> -->
             </ul>
           </div>
-          <!-- <div class="col-md-12">
-            <ul class="page-number">
-              <li class="active"><a href="#">1</a></li>
-              <li><a href="#">2</a></li>
-              <li><a href="#">3</a></li>
-              <li><a href="#">></a></li>
-            </ul>
-          </div>
-          <h1>{{ length_blog }}</h1> -->
+          
         </div>
       </div>
     </div>

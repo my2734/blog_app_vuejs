@@ -159,6 +159,7 @@
 </template>
 
 <script>
+import store from '@/store'
 import axios from "axios";
 export default {
   name: "LoginApp",
@@ -241,22 +242,24 @@ export default {
       axios
         .post("http://localhost:8080/api/auth/login", data)
         .then((response) => {
-          const token = response.data;
+          const token = response.data.token;
+          const role = response.data.role
+          // console.log(response.data)
           this.setCookie("token", token, '3d');
+          if(role == 0){
+            store.commit('UPDATE_ADMIN',true)
+          }
+          store.commit('UPDATE_AUTH',true)
+          store.commit('UPDATE_AUTH_USERNAME',response.data.username)
+
           this.user_login.username=""
           this.user_login.password=""
-          axios.get("http://localhost:8080/api/isAdmin/"+token)
-            .then((response)=>{
-              if(response.status == 200){
-                  this.$store.commit('TOGGLE_AUTH')
-                // if(response.data == "true"){
-                // this.$store.state.isAdmin = true;
-                // }else{
-                //   this.$store.state.isAdmin = false;
-                // }
-                // this.$store.state.isAuthentication = true;
-              }              
-            })
+          // axios.get("http://localhost:8080/api/isAdmin/"+token)
+          //   .then((response)=>{
+          //     if(response.status == 200){
+          //         this.$store.commit('TOGGLE_AUTH')
+          //     }              
+          //   })
           this.$router.push({name: 'home'})
         })
         .catch(() => {

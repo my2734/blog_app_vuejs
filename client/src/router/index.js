@@ -10,32 +10,9 @@ import PostTags from '../views/main/PostTags.vue'
 import ListPost from '../views/main/ListPost.vue'
 import UpdatePost from '../views/main/UpdatePost.vue'
 import AboutApp from '../views/main/About.vue'
+import NotFound from '../views/main/NotFound.vue'
 
-
-// function getCookie(cname) {
-//   let name = cname + "=";
-//   let decodedCookie = decodeURIComponent(document.cookie);
-//   let ca = decodedCookie.split(';');
-//   for(let i = 0; i <ca.length; i++) {
-//     let c = ca[i];
-//     while (c.charAt(0) == ' ') {
-//       c = c.substring(1);
-//     }
-//     if (c.indexOf(name) == 0) {
-//       return c.substring(name.length, c.length);
-//     }
-//   }
-//   return "";
-// }
-
-// const token = getCookie('token');
-// console.log('token router.js');
-// if(token != ""){
-//   console.log('admin')
-// }else{
-//   console.log('home')
-// }
-
+import store from '@/store'
 import DashboardLayout from '../layouts/dashboard.vue'
 const routes = [
   {
@@ -103,7 +80,8 @@ const routes = [
     path: '/admin',
     name: 'dashboarh',
     component: DashboardLayout
-  }
+  },
+  { path: '/:pathMatch(.*)*', component: NotFound },
 ]
 
 
@@ -113,6 +91,9 @@ const router = createRouter({
   routes
 })
 
-
-
+router.beforeEach((to, from, next) => {
+  const array_router_admin = ['postblog', 'postcategory', 'posttags','listpost'];
+  if (array_router_admin.includes(to.name) && store.state.isAdmin == false ) next({ name: 'login' })
+  else next()
+})
 export default router

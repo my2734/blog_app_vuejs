@@ -47,15 +47,17 @@ router.post('/login' ,async (req,res)=>{
                 }else{
                     const {password,...userInfo} = user._doc
                     const TOKEN_SERECT = process.env.TOKEN_SERECT
+                    const role = user.role
                     const token = jwt.sign(userInfo, TOKEN_SERECT)
-                    res.status(200).json(token)
+                    res.status(200).json({
+                        token: token, 
+                        role: role
+                    })
                 }
             }catch(error){
                 res.status(500).json('verify error')
             }
-
         }
-
     }catch(error){
         res.status(500).json('Not found user')
     }

@@ -1,37 +1,4 @@
 import axios from 'axios'
- 
-function getCookie(cname) {
-    let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
-    for(let i = 0; i <ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return "";
-  }
-  var isAdmin = false;
-  var isAuthentication = false;
-  var token = getCookie('token');
-  if(token) isAuthentication = true;
-  axios.get('http://localhost:8080/api/isAdmin/'+token)
-  .then((response) => {
-      if(response.status==200){
-        if(response.data == false){
-          isAdmin = true
-        }else{
-          isAdmin = false
-        }
-      }
-    })
-  .catch(() => {
-      return false;
-  });
 
 
 
@@ -43,12 +10,13 @@ function getCookie(cname) {
           statusOverly: false,
           statusModal: false,
           statusBackground: true,
-          isAdmin: isAdmin,
+          isAdmin: false,
           auth: {
-            isAuthentication: isAuthentication,
+            isAuthentication: false,
+            username: "",
           },
           list_post: [],
-          length_all_blog: 0,
+          length_all_blog: 0, 
           category: {
             status: false,
             category:""
@@ -61,6 +29,15 @@ function getCookie(cname) {
       mutations: {
         TOGGLE_AUTH(state){
           state.auth.isAuthentication = !state.auth.isAuthentication
+        },
+        UPDATE_AUTH(state, isAuth){
+          state.auth.isAuthentication = isAuth
+        },
+        UPDATE_AUTH_USERNAME(state, name){
+          state.auth.username = name
+        },
+        UPDATE_ADMIN(state, isAdmin){
+          state.isAdmin = isAdmin
         },
         GET_LIST_POST(state, data){
           state.list_post = data.list_post

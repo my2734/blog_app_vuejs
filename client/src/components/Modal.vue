@@ -12,7 +12,7 @@
                 <a @click="handlerClickAbout($event)">About Us</a>
               </li>
               
-              <li>
+              <li v-if="isAdmnin">
                 <a style="cursor: pointer" @click="handleClickAdmin()">Admin</a>
               </li>
 
@@ -40,17 +40,24 @@
 </template>
 
 <script>
+import store from '@/store'
 import 'vue-router'
 import { mapState } from 'vuex';
 // import axios from 'axios';
 export default {
   name: "ModalApp",
+  data(){
+    
+  },
   computed: {
     status(){
       return this.$store.state.statusOverly;
     },
     isBlack(){
     return this.$store.state.statusBackground;
+    },
+    isAdmnin(){
+      return  store.state.isAdmin
     },
     ...mapState(['auth'])
     
@@ -74,9 +81,10 @@ export default {
       // //delete Token 
       this.deleteCookie('token')
       // //isAuthentication = false
-      this.$store.commit('TOGGLE_AUTH');
+      store.commit('UPDATE_ADMIN',false)
+      store.commit('UPDATE_AUTH',false)
+
       //isAdmin =  false
-      this.$store.state.isAdmin =  false
       //login
       this.$router.push({name: 'login'})
     },

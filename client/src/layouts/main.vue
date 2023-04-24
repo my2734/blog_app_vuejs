@@ -10,14 +10,7 @@
 
     <footer-app></footer-app>
 
-    <!-- Modal button -->
-    <!-- <div class="popup-icon" :class="{ addStylePuppop: !isBlack }" @click="handleModal">
-      <button id="modBtn" class="modal-btn" >
-        <img src="img/contact-icon.png" alt="" />
-      </button>
-    </div> -->
 
-    <!-- Modal -->
    
     <modal-app />
     <modal-real-app />

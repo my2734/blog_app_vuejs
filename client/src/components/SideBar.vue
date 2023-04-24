@@ -18,10 +18,10 @@
           <h2>Recent Posts</h2>
         </div>
         <ul>
-          <li v-for="blog in list_limit_blog3" :key="blog._id">
+          <li style="cursor:pointer" v-for="blog in list_limit_blog3" :key="blog._id">
             <a @click="handlerClickDetailPage(blog._id)" class="blog_current">
               <div class="image_current">
-                <img
+                <img v-if="blog.image"
                   class=""
                   :src="'http://localhost:8080/images/' + blog.image"
                   alt="Recent Post 1"
@@ -40,7 +40,7 @@
           <h2>Categories</h2>
         </div>
         <ul>
-          <li v-for="category_item in list_category" :key="category_item.name">
+          <li style="cursor:pointer" v-for="category_item in list_category" :key="category_item.name">
             <a @click="handlerClickCategory(category_item.name,$event)"
               >> {{ category_item.name }} ({{ category_item.quantity }})</a
             >
@@ -54,7 +54,7 @@
         <ul>
           <li v-for="blog in list_limit_blog8" :key="blog._id">
             <a  @click="handlerClickDetailPage(blog._id)">
-              <img :src="'http://localhost:8080/images/' + blog.image" alt="" />
+              <img v-if="blog.image" :src="'http://localhost:8080/images/' + blog.image" alt="" />
             </a>
           </li>
         </ul>
@@ -84,6 +84,7 @@ export default {
       this.getListPostBySearch(keySearch)
       // this.get_length_all_blog()
       this.$router.push({name: 'home'})
+      
     },  
     handlerClickCategory(name,e){
       e.preventDefault()

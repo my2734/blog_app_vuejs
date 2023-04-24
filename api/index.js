@@ -11,6 +11,7 @@ const path = require('path')
 const cors = require('cors')
 const User = require('./models/User')
 const jwt = require('jsonwebtoken')
+// const User = require('./models/User')
 require('dotenv').config()
 
 mongoose.set("strictQuery", true);
@@ -59,6 +60,17 @@ app.use('/api/category', categoryRouter)
 app.use('/api/user', userRouter)
 app.use('/api/post', postRouter)
 app.use('/api/tags', tagsRouter)
+
+app.post('/api/verify', async (req,res)=>{
+    const token = req.body.token
+    const user = jwt.verify(token,process.env.TOKEN_SERECT)
+    if(user){
+        const {password,...info} = user
+        res.status(200).json(info)
+    }else{
+        res.status(404).json('Not found user')
+    }
+})
 
 
 app.listen(8080, ()=>{
